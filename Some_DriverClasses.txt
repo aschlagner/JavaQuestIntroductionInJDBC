@@ -1,0 +1,6 @@
+/* Look up the actual driver classes for at least three databases. At least one of these databases should be MySQL or MariaDB. The other two databases are up to you. Specify the driver class name as a constant String in your Java code for this Quest. */
+
+Class.forName("com.mysql.cj.jdbc.Driver");
+Class.forName("org.mariadb.jdbc.Driver");
+Class.forName("org.postgresql.Driver");
+Class.forName("SQLite.JDBCDriver");
