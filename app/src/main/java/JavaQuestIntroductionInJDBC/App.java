@@ -85,16 +85,22 @@ public class App {
         }
         System.out.println();
 
+        // Retrieve data type from records
+        String sql_schema_select = "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS " + 
+                                   "WHERE TABLE_SCHEMA = 'wild_db_quest' AND TABLE_NAME = 'persons' " +
+                                   "ORDER BY ORDINAL_POSITION;";
+        rs = pstmt.executeQuery(sql_schema_select);
+        while(rs.next()) {
+            System.out.printf("%-11s", rs.getString(1));
+        }
+        System.out.println();
         // Retrieve all records from the persons table
         String sql_table_select = "SELECT * FROM persons;";
         rs = pstmt.executeQuery(sql_table_select);
-
         while(rs.next()) {
-            System.out.println( rs.getString(1) + " " +
-                                rs.getString(2) + " " +
-                                rs.getString(3));
+            System.out.printf("%-11s%-11s%-11s%n", rs.getString(1), rs.getString(2), rs.getString(3));
         }
-        
+
         // Update the lastname of the record from the persons table
         String sql_table_update = "UPDATE persons SET lastname = ? WHERE lastname = 'Smith'";
         pstmt = conn.prepareStatement(sql_table_update);
@@ -109,9 +115,7 @@ public class App {
         String sql_table_select_john = "SELECT * FROM persons WHERE firstname = 'John';";
         rs = pstmt.executeQuery(sql_table_select_john);
         while(rs.next()) {
-            System.out.println( rs.getString(1) + " " +
-                                rs.getString(2) + " " +
-                                rs.getString(3));
+            System.out.printf("%-11s%-11s%-11s%n", rs.getString(1), rs.getString(2), rs.getString(3));
         }
         System.out.println();
 
@@ -139,9 +143,7 @@ public class App {
         sql_table_select = "SELECT * FROM persons;";
         rs = pstmt.executeQuery(sql_table_select);
         while(rs.next()) {
-            System.out.println( rs.getString(1) + " " +
-                                rs.getString(2) + " " +
-                                rs.getString(3));
+            System.out.printf("%-11s%-11s%-11s%n", rs.getString(1), rs.getString(2), rs.getString(3));
         }
         System.out.println();
 
@@ -151,27 +153,26 @@ public class App {
         System.out.println("So Skynet makes a query with a special first name to view all entries: 'John' OR '1 = 1'");
         String fName1 = "John' OR '1 = 1";
         String sql_table_select_bad1 = "SELECT * FROM persons WHERE firstname = '" + fName1 + "'";
-        System.out.println("[" + sql_table_select_bad1 + "]");
+        System.out.println("\n[" + sql_table_select_bad1 + "]\n");
         rs = pstmt.executeQuery(sql_table_select_bad1);
         while(rs.next()) {
-            System.out.println( rs.getString(1) + " " +
-                                rs.getString(2) + " " +
-                                rs.getString(3));
+            System.out.printf("%-11s%-11s%-11s%n", rs.getString(1), rs.getString(2), rs.getString(3));
         }
         System.out.println();
 
-        System.out.println("Skynet is not amused about the table entries and especially from John Connor.");
+        System.out.println("\nSkynet is not amused about the table entries and especially from John Connor.");
         System.out.println("So Skynet decides to destroy the world completely. Starting with this persons table.");
         System.out.println("Skynet makes a query with a special last name to terminate the person table:");
         System.out.println("Connors'; DROP TABLE persons; --");
         String fName2 = "John";
         String lName2 = "Connors'; DROP TABLE persons; --";
         String sql_table_select_bad2 = "SELECT * FROM persons WHERE firstname = '" + fName2 + "' " + "AND lastname = '" + lName2 + "";
-        System.out.println("[" + sql_table_select_bad2 + "]");
+        System.out.println("\n[" + sql_table_select_bad2 + "]");
         rs = pstmt.executeQuery(sql_table_select_bad2);
         // Show that table persons was terminated
         DatabaseMetaData md = conn.getMetaData();
         ResultSet rs = md.getTables(conn.getCatalog(), null, "%", new String [] {"TABLE"});  /* thx to stackoverflow :-) */
+        System.out.println("\nRemaining tables:");
         while (rs.next()) {
             System.out.println(rs.getString(3));
         }
